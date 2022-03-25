@@ -170,19 +170,39 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public boolean tableInitialize() {
-		List<String> sqlList = new ArrayList<>();
-		sqlList.add("INSERT INTO Shohin VALUES ('0001', 'Tシャツ', '衣服', 1000, 500, '2009-09-20')");
-		sqlList.add("INSERT INTO Shohin VALUES ('0002', '穴あけパンチ', '事務用品', 500, 320, '2009-09-11')");
-		sqlList.add("INSERT INTO Shohin VALUES ('0003', 'カッターシャツ', '衣服', 4000, 2800, NULL)");
-		sqlList.add("INSERT INTO Shohin VALUES ('0005', '圧力鍋', 'キッチン用品', 6800, 5000, '2009-01-15')");
-		sqlList.add("INSERT INTO Shohin VALUES ('0006', 'フォーク', 'キッチン用品', 500, NULL, '2009-09-20')");
-		sqlList.add("INSERT INTO Shohin VALUES ('0007', 'おろしがね', 'キッチン用品', 880, 790, '2008-04-28')");
-		sqlList.add("INSERT INTO Shohin VALUES ('0008', 'ボールペン', '事務用品', 100, NULL, '2009-11-11')");
+		List<String[]> shohinList = new ArrayList<>();
+		String[] shohin0001 = {"0001", "Tシャツ", "衣服", "1000", "500", "2009-09-20"};
+		String[] shohin0002 = {"0002", "穴あけパンチ", "事務用品", "500", "320", "2009-09-11"};
+		String[] shohin0003 = {"0003", "カッターシャツ", "衣服", "4000", "2800", "NULL"};
+		String[] shohin0004 = {"0004", "包丁", "キッチン用品", "3000", "2800", "22009-09-20"};
+		String[] shohin0005 = {"0005", "圧力鍋", "キッチン用品", "6800", "5000", "2009-01-15"};
+		String[] shohin0006 = {"0006", "フォーク", "キッチン用品", "500", "NULL", "2009-09-20"};
+		String[] shohin0007 = {"0007", "おろしがね", "キッチン用品", "880", "790", "2008-04-28"};
+		String[] shohin0008 = {"0008", "ボールペン", "事務用品", "100", "NULL", "2009-11-11"};
 
-		try (Connection conn = ShohinUtils.getConnection();){
-			for(String sql:sqlList) {
-				conn.prepareStatement(sql).executeUpdate();
+		String sqlInsert = "INSERT INTO shohin(" +
+                "shohin_id," +
+                "shohin_mei," +
+                "shohin_bunrui," +
+                "hanbai_tanka," +
+                "siire_tanka," +
+                "torokubi" +
+                "VALUES(?,?,?,?,?,?)";
+
+		try (Connection conn = ShohinUtils.getConnection();
+				PreparedStatement pstm = conn.prepareStatement(sqlInsert)){
+			conn.setAutoCommit(false);
+			for(String[] ary:shohinList) {
+                pstm.setInt(1, Integer.parseInt(ary[0]));
+                pstm.setString(2, ary[1]);
+                pstm.setInt(3, Integer.parseInt(ary[2]));
+                pstm.setInt(4, Integer.parseInt(ary[3]));
+                pstm.setInt(5, Integer.parseInt(ary[4]));
+                pstm.setInt(6, Integer.parseInt(ary[5]));
+                pstm.addBatch();
 			}
+            pstm.executeBatch();
+            conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
