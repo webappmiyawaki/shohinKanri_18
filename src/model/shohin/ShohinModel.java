@@ -83,7 +83,7 @@ public class ShohinModel implements ShohinModelInterface {
 				return Shohin.builder()
 						.shohin_id(rs.getInt(shohin_id))
 						.shohin_mei(rs.getString("shohin_mei"))
-						.shohin_bunrui(rs.getString("shohin_bimro"))
+						.shohin_bunrui(rs.getString("shohin_bunrui"))
 						.hanbai_tanka(rs.getInt("hanbai_tanka"))
 						.shiire_tanka(rs.getInt("shiire_tanka"))
 						.torokubi(rs.getString("torokubi"))
@@ -99,15 +99,15 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public Shohin selectUnit(String shohin_mei,String shohin_bunrui) {
-		String sql = "SELECT * FROM shohin WHERE shohin_mei = ? AND shohin_bunrui = ?";
+		String sql = "SELECT * FROM shohin WHERE shohin_mei = LIKE ? AND shohin_bunrui = ?";
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstm = null;
 		try {
 			conn = ShohinUtils.getConnection();
 			pstm = conn.prepareStatement(sql);
-			pstm.setString(1, shohin_mei);
-			pstm.setString(2, shohin_bunrui);
+			pstm.setString(1, "%"+shohin_mei+"%");
+			pstm.setString(2, "%"+shohin_bunrui+"%");
 
 			rs = pstm.executeQuery();
 			if (rs.next()) {
