@@ -6,10 +6,11 @@ CREATE TABLE shohin(
     shohin_bunrui VARCHAR(100),
     hanbai_tanka INTEGER,
     shiire_tanka INTEGER,
-    torokubi DATE,
+    torokubi VARCHAR(100),
     primary key (shohin_id)
 );
 
+DROP TABLE shohin;
 TRUNCATE TABLE shohin;
 
 INSERT INTO Shohin VALUES ('0001', 'Tシャツ', '衣服', 1000, 500, '2009-09-20');

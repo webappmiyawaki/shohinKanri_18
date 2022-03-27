@@ -83,11 +83,11 @@ for(Shohin shohin:shohinList){
     </tbody>
 </table>
 <a href="/shohinKanri_18/AddShohin">追加</a>
-<input action=/shohinKanri_18/DeleteShohin type="submit" value="削除" method="post">
+<input type="submit" value="削除">
 </form>
 
-<form>
-<input action=/shohinKanri_18/TableInitialize type="submit" value="テーブル初期化" method="post">
+<form action=/shohinKanri_18/TableInitialize method="post">
+<input  type="submit" value="テーブル初期化" >
 </form>
 
 </body>

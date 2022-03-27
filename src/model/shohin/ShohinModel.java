@@ -31,7 +31,7 @@ public class ShohinModel implements ShohinModelInterface {
 			pstm.setString(3, shohin.getShohin_bunrui());
 			pstm.setInt(4, shohin.getHanbai_tanka());
 			pstm.setInt(5, shohin.getShiire_tanka());
-			pstm.setDate(6, shohin.getTorokubi());
+			pstm.setString(6, shohin.getTorokubi());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -53,7 +53,7 @@ public class ShohinModel implements ShohinModelInterface {
 								.shohin_bunrui(rs.getString("shohin_bunrui"))
 								.hanbai_tanka(rs.getInt("hanbai_tanka"))
 								.shiire_tanka(rs.getInt("shiire_tanka"))
-								.torokubi(rs.getDate("torokubi"))
+								.torokubi(rs.getString("torokubi"))
 								.build());
 			}
 			return shohinList;
@@ -86,7 +86,7 @@ public class ShohinModel implements ShohinModelInterface {
 						.shohin_bunrui(rs.getString("shohin_bimro"))
 						.hanbai_tanka(rs.getInt("hanbai_tanka"))
 						.shiire_tanka(rs.getInt("shiire_tanka"))
-						.torokubi(rs.getDate("torokubi"))
+						.torokubi(rs.getString("torokubi"))
 						.build();
 			}
 		} catch (SQLException e) {
@@ -117,7 +117,7 @@ public class ShohinModel implements ShohinModelInterface {
 						.shohin_bunrui(rs.getString("shohin_bunrui"))
 						.hanbai_tanka(rs.getInt("hanbai_tanka"))
 						.shiire_tanka(rs.getInt("shiire_tanka"))
-						.torokubi(rs.getDate("torokubi"))
+						.torokubi(rs.getString("torokubi"))
 						.build();
 			}
 		} catch (SQLException e) {
@@ -174,19 +174,27 @@ public class ShohinModel implements ShohinModelInterface {
 		String[] shohin0001 = {"0001", "Tシャツ", "衣服", "1000", "500", "2009-09-20"};
 		String[] shohin0002 = {"0002", "穴あけパンチ", "事務用品", "500", "320", "2009-09-11"};
 		String[] shohin0003 = {"0003", "カッターシャツ", "衣服", "4000", "2800", "NULL"};
-		String[] shohin0004 = {"0004", "包丁", "キッチン用品", "3000", "2800", "22009-09-20"};
+		String[] shohin0004 = {"0004", "包丁", "キッチン用品", "3000", "2800", "2009-09-20"};
 		String[] shohin0005 = {"0005", "圧力鍋", "キッチン用品", "6800", "5000", "2009-01-15"};
-		String[] shohin0006 = {"0006", "フォーク", "キッチン用品", "500", "NULL", "2009-09-20"};
+		String[] shohin0006 = {"0006", "フォーク", "キッチン用品", "500", "0", "2009-09-20"};
 		String[] shohin0007 = {"0007", "おろしがね", "キッチン用品", "880", "790", "2008-04-28"};
-		String[] shohin0008 = {"0008", "ボールペン", "事務用品", "100", "NULL", "2009-11-11"};
+		String[] shohin0008 = {"0008", "ボールペン", "事務用品", "100", "0", "2009-11-11"};
+		shohinList.add(shohin0001);
+		shohinList.add(shohin0002);
+		shohinList.add(shohin0003);
+		shohinList.add(shohin0004);
+		shohinList.add(shohin0005);
+		shohinList.add(shohin0006);
+		shohinList.add(shohin0007);
+		shohinList.add(shohin0008);
 
 		String sqlInsert = "INSERT INTO shohin(" +
                 "shohin_id," +
                 "shohin_mei," +
                 "shohin_bunrui," +
                 "hanbai_tanka," +
-                "siire_tanka," +
-                "torokubi" +
+                "shiire_tanka," +
+                "torokubi) " +
                 "VALUES(?,?,?,?,?,?)";
 
 		try (Connection conn = ShohinUtils.getConnection();
@@ -195,11 +203,25 @@ public class ShohinModel implements ShohinModelInterface {
 			for(String[] ary:shohinList) {
                 pstm.setInt(1, Integer.parseInt(ary[0]));
                 pstm.setString(2, ary[1]);
-                pstm.setInt(3, Integer.parseInt(ary[2]));
-                pstm.setInt(4, Integer.parseInt(ary[3]));
+                pstm.setString(3, ary[2]);
+                if(ary[3]==null) {
+                	pstm.setInt(4,0);
+                }else {
+                	pstm.setInt(4, Integer.parseInt(ary[3]));
+                }
+
+                if(ary[4]==null) {
+                	pstm.setInt(5,0);
+                }else {
                 pstm.setInt(5, Integer.parseInt(ary[4]));
-                pstm.setInt(6, Integer.parseInt(ary[5]));
+                }
+                if(ary[5]==null) {
+                	pstm.setString(6,null);
+                }else {
+                	pstm.setString(6, ary[5]);
+                }
                 pstm.addBatch();
+                //setNull
 			}
             pstm.executeBatch();
             conn.commit();

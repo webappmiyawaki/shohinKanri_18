@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,10 +18,6 @@ public class TableInitialize extends HttpServlet {
 		ShohinModel shohinModel = new ShohinModel();
 		shohinModel.deleteAll();
 		shohinModel.tableInitialize();
-
-		RequestDispatcher dispatcher =
-		        request.getRequestDispatcher("/Main");
-
-		    dispatcher.forward(request, response);
+		response.sendRedirect("/shohinKanri_18/Main");
 	}
 }
