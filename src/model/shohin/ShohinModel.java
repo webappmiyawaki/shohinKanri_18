@@ -42,7 +42,7 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public List<Shohin> selectAll() {
-		String sql = "SELECT * FROM shohin + WHERE * ORDER BY shohin_id";
+		String sql = "SELECT * FROM shohin ORDER BY shohin_id";
 		try (Connection conn = ShohinUtils.getConnection();
 			ResultSet rs = conn.prepareStatement(sql).executeQuery()) {
 			List<Shohin> shohinList = new ArrayList<>();
@@ -56,7 +56,11 @@ public class ShohinModel implements ShohinModelInterface {
 								.torokubi(rs.getString("torokubi"))
 								.build());
 			}
-			return shohinList;
+			if(shohinList.size()>0) {
+				return shohinList;
+			}else {
+				return null;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -253,7 +257,11 @@ public class ShohinModel implements ShohinModelInterface {
 								.torokubi(rs.getString("torokubi"))
 								.build());
 			}
-			return shohinList;
+			if(shohinList.size()>0) {
+				return shohinList;
+			}else {
+				return null;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

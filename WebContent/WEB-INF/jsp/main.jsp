@@ -3,6 +3,7 @@
 <%@ page import="model.shohin.Shohin" %>
 <%@ page import = "model.shohin.ShohinBunrui" %>
 <%@ page import ="java.util.*" %>
+<%@ page import ="model.shohin.IsModel" %>
 
 <!DOCTYPE html>
 <html>
@@ -35,16 +36,15 @@
 </form>
 
 ****検索結果を出力する場所****<br>
-<%String isSearched = request.getParameter("isSearch");%>
+<%IsModel isModel = (IsModel)request.getAttribute("isModel");%>
 	<%List<Shohin> sList = (List<Shohin>)request.getAttribute("shohinList");%>
-	<%if(sList==null){%>
+	<%if(isModel!=null&&sList==null){%>
 		検索結果はありませんでした。
-	<% }else{ %>
-		<% for(Shohin s:sList){ %>
-		<% s.getStringShohin_id(); %>
-		<%} %>
 	<%}%>
-
+	<%if(isModel!=null){
+		if(isModel.isDelete()==true){%>
+				削除が完了しました。
+	<% }}%>
 <br>
 <br>
 <form action="/shohinKanri_18/DeleteShohin" method="get" action="delete">
@@ -66,10 +66,9 @@
 
 
 <%
-List<Shohin> shohinList = (List<Shohin>)session.getAttribute("shohinList");
-if(shohinList==null){
+if(sList==null){
 }else{
-for(Shohin shohin:shohinList){
+for(Shohin shohin:sList){
 %>
 <tr>
 <td><input type="radio" name="shohin_id" value=<%= shohin.getStringShohin_id() %>>
