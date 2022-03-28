@@ -21,7 +21,7 @@ public class Main extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		//戻り値：List<Shohin>
-		session.setAttribute("shohinList",shohinModel.selectAll());
+		session.setAttribute("shohinList",null);
 
 		RequestDispatcher dispatcher =
 		        request.getRequestDispatcher("/WEB-INF/jsp/main.jsp");

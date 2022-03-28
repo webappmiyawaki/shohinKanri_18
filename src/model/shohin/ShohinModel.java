@@ -42,9 +42,9 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public List<Shohin> selectAll() {
-		String sql = "SELECT * FROM shohin ORDER BY shohin_id";
+		String sql = "SELECT * FROM shohin + WHERE * ORDER BY shohin_id";
 		try (Connection conn = ShohinUtils.getConnection();
-				ResultSet rs = conn.prepareStatement(sql).executeQuery()) {
+			ResultSet rs = conn.prepareStatement(sql).executeQuery()) {
 			List<Shohin> shohinList = new ArrayList<>();
 			while (rs.next()) {
 				shohinList.add(Shohin.builder()
@@ -63,11 +63,7 @@ public class ShohinModel implements ShohinModelInterface {
 		return null;
 	}
 
-	/**
-	 *     Statement
-	 *     注: Statementオブジェクトがクローズされるとき、
-	 *     その現在のResultSetオブジェクトが存在すれば、それもクローズされます。
-	 */
+
 	@Override
 	public Shohin selectUnit(int shohin_id) {
 		String sql = "SELECT * FROM shohin WHERE shohin_id = ?";
@@ -99,15 +95,15 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public Shohin selectUnit(String shohin_mei,String shohin_bunrui) {
-		String sql = "SELECT * FROM shohin WHERE shohin_mei = LIKE ? AND shohin_bunrui = ?";
+		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ?";
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstm = null;
 		try {
 			conn = ShohinUtils.getConnection();
 			pstm = conn.prepareStatement(sql);
-			pstm.setString(1, "%"+shohin_mei+"%");
-			pstm.setString(2, "%"+shohin_bunrui+"%");
+			pstm.setString(1, "%"+shohin_mei);
+			pstm.setString(2, "%"+shohin_bunrui);
 
 			rs = pstm.executeQuery();
 			if (rs.next()) {
@@ -230,6 +226,40 @@ public class ShohinModel implements ShohinModelInterface {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<Shohin> selectAny(String shohin_mei, String shohin_bunrui) {
+		if(shohin_mei.equals("")&&shohin_bunrui.equals(""))return null;
+		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ?";
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		try {
+			conn = ShohinUtils.getConnection();
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, "%"+shohin_mei);
+			pstm.setString(2, "%"+shohin_bunrui);
+			rs = pstm.executeQuery();
+			List<Shohin> shohinList = new ArrayList<>();
+
+			while (rs.next()) {
+				shohinList.add(Shohin.builder()
+								.shohin_id(rs.getInt("shohin_id"))
+								.shohin_mei(rs.getString("shohin_mei"))
+								.shohin_bunrui(rs.getString("shohin_bunrui"))
+								.hanbai_tanka(rs.getInt("hanbai_tanka"))
+								.shiire_tanka(rs.getInt("shiire_tanka"))
+								.torokubi(rs.getString("torokubi"))
+								.build());
+			}
+			return shohinList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ShohinUtils.close(pstm, conn, rs);
+		}
+		return null;
 	}
 
 }

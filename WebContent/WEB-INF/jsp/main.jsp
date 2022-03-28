@@ -36,11 +36,13 @@
 
 ****検索結果を出力する場所****<br>
 <%String isSearched = request.getParameter("isSearch");%>
-	<%Shohin searchedShohin = (Shohin)request.getAttribute("shohin");%>
-	<%if(searchedShohin==null){%>
+	<%List<Shohin> sList = (List<Shohin>)request.getAttribute("shohinList");%>
+	<%if(sList==null){%>
 		検索結果はありませんでした。
 	<% }else{ %>
-		<%= searchedShohin %>
+		<% for(Shohin s:sList){ %>
+		<% s.getStringShohin_id(); %>
+		<%} %>
 	<%}%>
 
 <br>
@@ -52,20 +54,21 @@
             <th class="title" colspan="6">商品一覧</th>
         </tr>
         <tr class="midashi">
-            <th>select</th><th>shohin_id</th>
-                        <th>shohin_mei</th>
-                        <th>shohin_bunrui</th>
-                        <th>hanbai_tanka</th>
-                        <th>shiire_tanka</th>
-
-
-        </tr>
+            <th>選択</th>
+            <th>商品ID</th>
+            <th>商品名</th>
+            <th>商品分類</th>
+            <th>販売単価</th>
+            <th>仕入単価</th>
+       	</tr>
     </thead>
     <tbody>
 
 
 <%
 List<Shohin> shohinList = (List<Shohin>)session.getAttribute("shohinList");
+if(shohinList==null){
+}else{
 for(Shohin shohin:shohinList){
 %>
 <tr>
@@ -78,7 +81,7 @@ for(Shohin shohin:shohinList){
 <td><%= shohin.getShiire_tanka() %></td>
 
 </tr>
-<%} %>
+<%}} %>
 
     </tbody>
 </table>

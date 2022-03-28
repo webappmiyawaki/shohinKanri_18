@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,12 +23,12 @@ public class SerchShohin extends HttpServlet {
 		String shohin_bunrui = request.getParameter("shohin_bunrui");
 
 		if(shohin_mei==null||shohin_bunrui==null) {
-			request.setAttribute("shohin",null);
+			request.setAttribute("shohinList",null);
 		}else {
 			ShohinModel shohinModel = new ShohinModel();
-			Shohin shohin = shohinModel.selectUnit(shohin_mei,shohin_bunrui);
-			System.out.println(shohin);
-			request.setAttribute("shohin", shohin);
+			List<Shohin> shohinList = shohinModel.selectAny(shohin_mei,shohin_bunrui);
+//			shohinList.stream().forEach(System.out::println);
+			request.setAttribute("shohinList", shohinList);
 		}
 		RequestDispatcher dispatcher
 		= request.getRequestDispatcher("/WEB-INF/jsp/main.jsp");
