@@ -129,11 +129,11 @@ public class ShohinModel implements ShohinModelInterface {
 	}
 
 	@Override
-	public boolean update(int shohin_num) {
+	public boolean update(String shohin_num) {
 		String sql = "UPDATE shohin SET shohin_mei='rename' where shohin_id = ?";
 		try (Connection conn = ShohinUtils.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql)) {
-			pstm.setInt(1, shohin_num);
+			pstm.setInt(1, Integer.parseInt(shohin_num));
 			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -234,7 +234,6 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public List<Shohin> selectAny(String shohin_mei, String shohin_bunrui) {
-		if(shohin_mei.equals("")&&shohin_bunrui.equals(""))return null;
 		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ?";
 		ResultSet rs = null;
 		Connection conn = null;

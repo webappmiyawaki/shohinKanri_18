@@ -10,13 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.shohin.ShohinModel;
 
-@WebServlet("/TableInitialize")
-public class TableInitialize extends HttpServlet {
+@WebServlet("/UpdateShohin")
+public class UpdateShohin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ShohinModel shohinModel = new ShohinModel();
-		shohinModel.deleteAll();
-		shohinModel.tableInitialize();
-		response.sendRedirect("/shohinKanri_18/Main");
+		String shohin_id = request.getParameter("shohin_id");
+
+		shohinModel.update(shohin_id);
+
+		request.getRequestDispatcher("/WEB-INF/jsp/updateShohin.jsp").forward(request,response);
 	}
+
 }

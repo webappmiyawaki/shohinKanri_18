@@ -7,8 +7,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.shohin.IsModel;
+import model.shohin.Shohin;
 import model.shohin.ShohinModel;
 
 @WebServlet("/DeleteShohin")
@@ -17,11 +19,13 @@ public class DeleteShohin extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		String shohin_id = request.getParameter("shohin_id");
+		HttpSession session = request.getSession(true);
+		Shohin shohin = (Shohin)session.getAttribute("shohin");
+
 		IsModel isModel = new IsModel();
-		if(shohin_id!=null) {
+		if(shohin.getShohin_id()==0) {
 			ShohinModel shohinModel = new ShohinModel();
-			isModel.setDelete(shohinModel.deleteUnit(shohin_id));
+			isModel.setDelete(shohinModel.deleteUnit(shohin.getStringShohin_id()));
 			request.setAttribute("isModel", isModel);
 		}
 		request.getRequestDispatcher("/Main").forward(request, response);

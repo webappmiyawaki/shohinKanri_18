@@ -1,8 +1,10 @@
+<%@page import="java.io.IOException"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="model.shohin.Shohin" %>
 <%@ page import = "model.shohin.ShohinBunrui" %>
 <%@ page import ="java.util.*" %>
+<%@ page import ="java.lang.*" %>
 <%@ page import ="model.shohin.IsModel" %>
 
 <!DOCTYPE html>
@@ -16,7 +18,7 @@
 
 <h1>商品検索</h1>
 <% request.setCharacterEncoding("UTF-8"); %>
-<form action="/shohinKanri_18/SerchShohin" method="post">
+<form action="/shohinKanri_18/SelectProcess" method="get">
 	<table>
 	<tbody>
 	<tr>
@@ -32,22 +34,24 @@
 	</tr>
 	</tbody>
 	</table>
-	<input type="submit" value="検索">
+	<input type="submit" value="検索" name="processName">
 </form>
 
 ****検索結果を出力する場所****<br>
-<%IsModel isModel = (IsModel)request.getAttribute("isModel");%>
+<% IsModel isModel = (IsModel)request.getAttribute("isModel");%>
 	<%List<Shohin> sList = (List<Shohin>)request.getAttribute("shohinList");%>
-	<%if(isModel!=null&&sList==null){%>
+	<% if(isModel!=null&&sList==null){ %>
 		検索結果はありませんでした。
-	<%}%>
-	<%if(isModel!=null){
-		if(isModel.isDelete()==true){%>
+	<% } %>
+	<% if(isModel!=null){ %>
+	<% if(isModel.isDelete()==true){ %>
 				削除が完了しました。
-	<% }}%>
+	<% } %>
+	<% } %>
+
 <br>
 <br>
-<form action="/shohinKanri_18/DeleteShohin" method="get" action="delete">
+<form action="/shohinKanri_18/SelectProcess" method="get" action="">
 	<table>
     <thead>
         <tr>
@@ -85,10 +89,11 @@ for(Shohin shohin:sList){
     </tbody>
 </table>
 <a href="/shohinKanri_18/AddShohin">追加</a>
-<input type="submit" value="削除">
+<input type="submit" value="更新" name="processName">
+<input type="submit" value="削除" name="processName">
 </form>
 
-<form action=/shohinKanri_18/TableInitialize method="post">
+<form action=/shohinKanri_18/TableInitialize method="post" name="processName">
 <input  type="submit" value="テーブル初期化" >
 </form>
 
