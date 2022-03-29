@@ -8,7 +8,7 @@ interface ShohinModelInterface {
     List<Shohin> selectAny(String shohin_mei,String shohin_bunrui);
     Shohin selectUnit(int shohin_id);
     Shohin selectUnit(String shohin_mei,String shohin_bunrui);
-    boolean update(String shohin_id);
+    boolean update(Shohin shohin);
     boolean deleteAll();
     boolean deleteUnit(String shohin_id);
     boolean tableInitialize();

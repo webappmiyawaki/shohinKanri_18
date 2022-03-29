@@ -5,7 +5,7 @@
 <%@ page import = "model.shohin.ShohinBunrui" %>
 <%@ page import ="java.util.*" %>
 <%@ page import ="java.lang.*" %>
-<%@ page import ="model.shohin.IsModel" %>
+<%@ page import ="model.shohin.VerifyModel" %>
 
 <!DOCTYPE html>
 <html>
@@ -17,39 +17,43 @@
 <body>
 
 <h1>商品検索</h1>
-<% request.setCharacterEncoding("UTF-8"); %>
+<%
+request.setCharacterEncoding("UTF-8");
+%>
 <form action="/shohinKanri_18/SelectProcess" method="get">
 	<table>
 	<tbody>
 	<tr>
 	<td>商品名：<input type="text" name="shohin_mei" value=""></td>
 	<td>商品分類：<select name="shohin_bunrui">
-	<% for(ShohinBunrui bunrui :ShohinBunrui.values()){ %>
-		<option value=<%= bunrui.getBunrui() %>>
-		<%= bunrui.getBunrui() %>
+	<%
+	for(ShohinBunrui bunrui :ShohinBunrui.values()){
+	%>
+		<option value=<%=bunrui.getBunrui()%>>
+		<%=bunrui.getBunrui()%>
 		</option>
-	<% }%>
+	<%
+	}
+	%>
 	</select>
 	</td>
 	</tr>
 	</tbody>
 	</table>
-	<input type="submit" value="検索" name="processName">
+	<input type="submit" value="検索" name="baseProcessName">
 </form>
-
-****検索結果を出力する場所****<br>
-<% IsModel isModel = (IsModel)request.getAttribute("isModel");%>
+<%
+VerifyModel verifyModel = (VerifyModel)request.getAttribute("verifyModel");
+%>
 	<%List<Shohin> sList = (List<Shohin>)request.getAttribute("shohinList");%>
-	<% if(isModel!=null&&sList==null){ %>
+	<%if(verifyModel!=null){
+	if(verifyModel.isSearched()&&sList==null){ %>
 		検索結果はありませんでした。
 	<% } %>
-	<% if(isModel!=null){ %>
-	<% if(isModel.isDelete()==true){ %>
+	<% if(verifyModel.isDeleted()){ %>
 				削除が完了しました。
-	<% } %>
-	<% } %>
+	<% }} %>
 
-<br>
 <br>
 <form action="/shohinKanri_18/SelectProcess" method="get" action="">
 	<table>
@@ -89,13 +93,15 @@ for(Shohin shohin:sList){
     </tbody>
 </table>
 <a href="/shohinKanri_18/AddShohin">追加</a>
-<input type="submit" value="更新" name="processName">
-<input type="submit" value="削除" name="processName">
+<input type="submit" value="更新" name="baseProcessName">
+<input type="submit" value="削除" name="baseProcessName">
 </form>
 
-<form action=/shohinKanri_18/TableInitialize method="post" name="processName">
-<input  type="submit" value="テーブル初期化" >
+<form action=/shohinKanri_18/SelectProcess method="get">
+<input  type="submit" value="テーブル初期化" name="baseProcessName">
 </form>
-
+<form action=/shohinKanri_18/SelectProcess method="get">
+<input type="submit" value="csvダウンロード" name="baseProcessName">
+</form>
 </body>
 </html>

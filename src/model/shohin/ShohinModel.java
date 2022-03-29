@@ -129,11 +129,17 @@ public class ShohinModel implements ShohinModelInterface {
 	}
 
 	@Override
-	public boolean update(String shohin_num) {
-		String sql = "UPDATE shohin SET shohin_mei='rename' where shohin_id = ?";
+	public boolean update(Shohin shohin) {
+		if(shohin.getShohin_id()==0)return false;
+		String sql = "UPDATE shohin "
+				+ "SET shohin_mei=?,shohin_bunrui=?,hanbai_tanka=?,shiire_tanka=? where shohin_id = ?";
 		try (Connection conn = ShohinUtils.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql)) {
-			pstm.setInt(1, Integer.parseInt(shohin_num));
+			pstm.setString(1, shohin.getShohin_mei());
+			pstm.setString(2, shohin.getShohin_bunrui());
+			pstm.setInt(3, shohin.getHanbai_tanka());
+			pstm.setInt(4, shohin.getShiire_tanka());
+			pstm.setInt(5, shohin.getShohin_id());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -157,15 +163,20 @@ public class ShohinModel implements ShohinModelInterface {
 	@Override
 	public boolean deleteUnit(String shohin_num) {
 		String sql = "DELETE FROM shohin WHERE shohin_id = ?";
+		int delCounter=0;
 		try (Connection conn = ShohinUtils.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql)) {
 			pstm.setInt(1, Integer.parseInt(shohin_num));
-			pstm.executeUpdate();
+			delCounter=pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+		if(delCounter==0) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 
 	@Override
@@ -234,7 +245,7 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public List<Shohin> selectAny(String shohin_mei, String shohin_bunrui) {
-		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ?";
+		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ? ORDER BY shohin_id";
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstm = null;

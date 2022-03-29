@@ -25,7 +25,7 @@ public class Shohin implements Serializable{
 
     @Override
     public String toString(){
-        return String.format("shohin_id:%04d shohin_mei:%s shohin_bunrui:%s hanbai_tanka:%d shiire_tanak:%d",
+        return String.format("%04d,%s,%s,%d,%d",
         		this.shohin_id,
         		this.shohin_mei,
         		this.shohin_bunrui,
