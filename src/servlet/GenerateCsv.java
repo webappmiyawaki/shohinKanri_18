@@ -24,12 +24,13 @@ public class GenerateCsv extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/jsp/main.jsp").forward(request, response);
 		}
 
-		String filename = "sample.csv";
+		String filename = "shohin.csv";
         response.setHeader("Content-Type", "text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
         StringBuffer sb = new StringBuffer();
+        sb.append("商品ID,商品名,商品分類,販売単価,仕入単価");
         for(Shohin shohin:shohinList) {
-        	sb.append(shohin).append("\n");
+        	sb.append("\n").append(shohin);
         }
 
         PrintWriter pw = response.getWriter();

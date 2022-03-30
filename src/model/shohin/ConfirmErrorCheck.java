@@ -22,6 +22,8 @@ public class ConfirmErrorCheck {
 		StringBuilder errorSb = new StringBuilder("");
 		if(shohin.getShohin_id()==0) {
 			errorSb.append("商品IDは必須項目です。<br>");
+		}else if(shohin.getShohin_id()>10000){
+			errorSb.append("商品IDは４文字以下で入力してください。<br>");
 		}
 		if(shohin.getShohin_mei()==null||shohin.getShohin_mei().isBlank()) {
 			errorSb.append("商品名は必須項目です。<br>");
@@ -33,7 +35,6 @@ public class ConfirmErrorCheck {
 
 
 		if(shohin.getHanbai_tanka()==0) {
-			errorSb.append("販売価格が入力されていません。<br>");
 		}else {
 			if(!shohin.isInteger_hanbai_tanka()) {
 			errorSb.append("販売単価には整数を入力してください。<br>");
@@ -41,7 +42,6 @@ public class ConfirmErrorCheck {
 		}
 
 		if(shohin.getShiire_tanka()==0) {
-			errorSb.append("仕入単価が入力されていません。<br>");
 		}else {
 	        if(!shohin.isInteger_shiire_tanka()) {
 			errorSb.append("仕入単価には整数を入力してください。<br>");

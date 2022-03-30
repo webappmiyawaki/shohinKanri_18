@@ -34,9 +34,9 @@ VerifyModel verifyModel = (VerifyModel)request.getAttribute("verifyModel");
 %>
 <%if(verifyModel!=null){
 if(verifyModel.isAdded()){ %>
-	追加が完了しました。
+	登録が完了しました。
 <%	}else{ %>
-	追加出来ませんでした。
+	登録処理時に問題が発生しました。
 <% }} %>
 
 <form action="/shohinKanri_18/SelectProcess" method="get">

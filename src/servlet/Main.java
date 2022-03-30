@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,10 +14,13 @@ public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		//戻り値：List<Shohin>
-		session.setAttribute("shohinList",null);
-		RequestDispatcher dispatch = request.getRequestDispatcher("/WEB-INF/jsp/main.jsp");
-		dispatch.forward(request, response);
+		String requestPath=null;
+		if(session.getAttribute("shohinList")==null) {
+			requestPath="/WEB-INF/jsp/main.jsp";
+		}else {
+			requestPath="/SearchShohin";
+		}
+		request.getRequestDispatcher(requestPath).forward(request, response);
 	}
 
 }

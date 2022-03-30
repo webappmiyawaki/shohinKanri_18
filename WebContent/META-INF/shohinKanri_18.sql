@@ -6,7 +6,7 @@ CREATE TABLE shohin(
     shohin_bunrui VARCHAR(100),
     hanbai_tanka INTEGER,
     shiire_tanka INTEGER,
-    torokubi VARCHAR(100),
+    torokubi DATE,
     primary key (shohin_id)
 );
 

@@ -24,15 +24,18 @@ public class SearchShohin extends HttpServlet {
 		Shohin shohin = (Shohin)session.getAttribute("shohin");
 
 		ShohinModel shohinModel = new ShohinModel();
-		List<Shohin> shohinList=null;
+		List<Shohin> shohinList=(List<Shohin>)session.getAttribute("shohinList");
 		VerifyModel isModel = new VerifyModel();
-		if(shohin.getShohin_mei().equals("")&&shohin.getShohin_bunrui()==null) {
-			shohinList = shohinModel.selectAll();
-		}else if(shohin.getShohin_mei().equals("")||shohin.getShohin_bunrui().equals("")) {
+//		if(shohin!=null) {
 			shohinList = shohinModel.selectAny(shohin.getShohin_mei(),shohin.getShohin_bunrui());
-		}else {
-			shohinList = shohinModel.selectAny(shohin.getShohin_mei(),shohin.getShohin_bunrui());
-		}
+//			if(shohin.getShohin_mei().equals("")&&shohin.getShohin_bunrui().equals("")) {
+//				shohinList = shohinModel.selectAll();
+//			}else if(shohin.getShohin_mei().equals("")||shohin.getShohin_bunrui().equals("")) {
+//				shohinList = shohinModel.selectAny(shohin.getShohin_mei(),shohin.getShohin_bunrui());
+//			}else {
+//				shohinList = shohinModel.selectAny(shohin.getShohin_mei(),shohin.getShohin_bunrui());
+//			}
+//		}
 
 		request.setAttribute("isSearched", isModel);
 		request.setAttribute("shohinList", shohinList);

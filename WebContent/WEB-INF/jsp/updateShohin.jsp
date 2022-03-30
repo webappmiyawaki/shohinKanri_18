@@ -46,18 +46,22 @@ if(verifyModel.isUpdated()){ %>
 
 <form action="/shohinKanri_18/SelectProcess" method="get">
 商品ID：<input type="text" name="shohin_id" value="<%= shohinValue %>" readonly="readonly"><br>
-商品名：<input type="text" name="shohin_mei" value=""><br>
+商品名：<input type="text" name="shohin_mei" value="<%= shohin.getShohin_mei() %>"><br>
 商品分類：
 	<% for(ShohinBunrui bunrui :ShohinBunrui.values()){ %>
 		<% if(!bunrui.getBunrui().isBlank()){ %>
-		<input type="radio" name="shohin_bunrui" value=<%= bunrui.getBunrui() %>>
+		<% if(bunrui.getBunrui().equals(shohin.getShohin_bunrui())){ %>
+		<input type="radio" name="shohin_bunrui" value=<%= bunrui.getBunrui()  %> checked="checked" >
 		<%= bunrui.getBunrui() %>
-		<% } %>
+		<% } else { %>
+		<input type="radio" name="shohin_bunrui" value=<%= bunrui.getBunrui() %> >
+		<%= bunrui.getBunrui() %>
+		<% } }%>
 	<% }%>
 
 	<br>
-販売単価：<input type="text" name="hanbai_tanka" value=""><br>
-仕入単価：<input type="text" name="shiire_tanka" value=""><br>
+販売単価：<input type="text" name="hanbai_tanka" value="<%= shohin.getHanbai_tanka() %>"><br>
+仕入単価：<input type="text" name="shiire_tanka" value="<%= shohin.getShiire_tanka() %>"><br>
 
 <input type="submit" value="更新" name="addProcessUpdate">
 <a href="/shohinKanri_18/Main">戻る</a>
