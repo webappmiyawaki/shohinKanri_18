@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,18 +25,39 @@ public class SelectProcess extends HttpServlet {
 	String shohin_bunrui =request.getParameter("shohin_bunrui");
 	String hanbai = request.getParameter("hanbai_tanka");
 	String shiire = request.getParameter("shiire_tanka");
-
+	Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
 	if(shohin_id==null||shohin_id.isBlank()) {shohin_id="0";}
-	if(hanbai==null||hanbai.isBlank()) {hanbai="0";}
-	if(shiire==null||shiire.isBlank()) {shiire="0";}
 
-	HttpSession session = request.getSession(true);
+
+	boolean isInteger_hanbai_tanka=false;
+	boolean isInteger_shiire_tanka=false;
+
+	if(hanbai==null||hanbai.isBlank()) {hanbai="0";
+	}else {
+    	isInteger_hanbai_tanka = pattern.matcher(hanbai).matches();
+    	if(!isInteger_hanbai_tanka) {
+    		hanbai=hanbai.substring(0, hanbai.indexOf("."));
+    	}
+	}
+
+	if(shiire==null||shiire.isBlank()) {shiire="0";
+	}else {
+		isInteger_shiire_tanka = pattern.matcher(shiire).matches();
+		if(!isInteger_shiire_tanka) {
+    		shiire=shiire.substring(0, shiire.indexOf("."));
+    	}
+	}
+
+
+    	HttpSession session = request.getSession(true);
 	session.setAttribute("shohin",Shohin.builder()
 			.shohin_id(Integer.parseInt(shohin_id))
 			.shohin_mei(shohin_mei)
 			.shohin_bunrui(shohin_bunrui)
 			.hanbai_tanka(Integer.parseInt(hanbai))
 			.shiire_tanka(Integer.parseInt(shiire))
+			.isInteger_hanbai_tanka(isInteger_hanbai_tanka)
+			.isInteger_shiire_tanka(isInteger_shiire_tanka)
 			.build());
 
 	String processPath=null;

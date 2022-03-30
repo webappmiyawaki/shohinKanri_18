@@ -1,7 +1,5 @@
 package model.shohin;
 
-import java.util.regex.Pattern;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,9 +35,7 @@ public class ConfirmErrorCheck {
 		if(shohin.getHanbai_tanka()==0) {
 			errorSb.append("販売価格が入力されていません。<br>");
 		}else {
-			Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
-	        if(pattern.matcher(""+shohin.getHanbai_tanka()).matches()) {
-	        }else {
+			if(!shohin.isInteger_hanbai_tanka()) {
 			errorSb.append("販売単価には整数を入力してください。<br>");
 	        }
 		}
@@ -47,9 +43,7 @@ public class ConfirmErrorCheck {
 		if(shohin.getShiire_tanka()==0) {
 			errorSb.append("仕入単価が入力されていません。<br>");
 		}else {
-			Pattern pattern = Pattern.compile("^[0-9]+$|-[0-9]+$");
-	        if(pattern.matcher(""+shohin.getShiire_tanka()).matches()) {
-	        }else {
+	        if(!shohin.isInteger_shiire_tanka()) {
 			errorSb.append("仕入単価には整数を入力してください。<br>");
 	        }
 		}

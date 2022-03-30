@@ -18,7 +18,8 @@ public class Shohin implements Serializable{
     private int hanbai_tanka;
     private int shiire_tanka;
     private String torokubi;
-
+    private boolean isInteger_hanbai_tanka;
+    private boolean isInteger_shiire_tanka;
     public String getStringShohin_id() {
     	return String.format("%04d", this.shohin_id);
     }
