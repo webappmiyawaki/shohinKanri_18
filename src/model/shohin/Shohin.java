@@ -18,14 +18,15 @@ public class Shohin implements Serializable{
     private int hanbai_tanka;
     private int shiire_tanka;
     private String torokubi;
-
+    private boolean isInteger_hanbai_tanka;
+    private boolean isInteger_shiire_tanka;
     public String getStringShohin_id() {
     	return String.format("%04d", this.shohin_id);
     }
 
     @Override
     public String toString(){
-        return String.format("shohin_id:%04d shohin_mei:%s shohin_bunrui:%s hanbai_tanka:%d shiire_tanak:%d",
+        return String.format("%04d,%s,%s,%d,%d",
         		this.shohin_id,
         		this.shohin_mei,
         		this.shohin_bunrui,

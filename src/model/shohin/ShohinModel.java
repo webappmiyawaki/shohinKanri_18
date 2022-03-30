@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import dao.ShohinUtils;
 public class ShohinModel implements ShohinModelInterface {
 	@Override
 	public boolean insert(Shohin shohin) {
-		String sql = "INSERT INTO shohin VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO shohin VALUES (?, ?, ?, ?, ?, CURRENT_DATE)";
 		try (Connection conn = ShohinUtils.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql)) {
 			pstm.setInt(1, shohin.getShohin_id());
@@ -31,7 +33,6 @@ public class ShohinModel implements ShohinModelInterface {
 			pstm.setString(3, shohin.getShohin_bunrui());
 			pstm.setInt(4, shohin.getHanbai_tanka());
 			pstm.setInt(5, shohin.getShiire_tanka());
-			pstm.setString(6, shohin.getTorokubi());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -53,7 +54,7 @@ public class ShohinModel implements ShohinModelInterface {
 								.shohin_bunrui(rs.getString("shohin_bunrui"))
 								.hanbai_tanka(rs.getInt("hanbai_tanka"))
 								.shiire_tanka(rs.getInt("shiire_tanka"))
-								.torokubi(rs.getString("torokubi"))
+								.torokubi(null)
 								.build());
 			}
 			if(shohinList.size()>0) {
@@ -86,7 +87,7 @@ public class ShohinModel implements ShohinModelInterface {
 						.shohin_bunrui(rs.getString("shohin_bunrui"))
 						.hanbai_tanka(rs.getInt("hanbai_tanka"))
 						.shiire_tanka(rs.getInt("shiire_tanka"))
-						.torokubi(rs.getString("torokubi"))
+						.torokubi(null)
 						.build();
 			}
 		} catch (SQLException e) {
@@ -117,7 +118,7 @@ public class ShohinModel implements ShohinModelInterface {
 						.shohin_bunrui(rs.getString("shohin_bunrui"))
 						.hanbai_tanka(rs.getInt("hanbai_tanka"))
 						.shiire_tanka(rs.getInt("shiire_tanka"))
-						.torokubi(rs.getString("torokubi"))
+						.torokubi(null)
 						.build();
 			}
 		} catch (SQLException e) {
@@ -129,11 +130,17 @@ public class ShohinModel implements ShohinModelInterface {
 	}
 
 	@Override
-	public boolean update(String shohin_num) {
-		String sql = "UPDATE shohin SET shohin_mei='rename' where shohin_id = ?";
+	public boolean update(Shohin shohin) {
+		if(shohin.getShohin_id()==0)return false;
+		String sql = "UPDATE shohin "
+				+ "SET shohin_mei=?,shohin_bunrui=?,hanbai_tanka=?,shiire_tanka=? where shohin_id = ?";
 		try (Connection conn = ShohinUtils.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql)) {
-			pstm.setInt(1, Integer.parseInt(shohin_num));
+			pstm.setString(1, shohin.getShohin_mei());
+			pstm.setString(2, shohin.getShohin_bunrui());
+			pstm.setInt(3, shohin.getHanbai_tanka());
+			pstm.setInt(4, shohin.getShiire_tanka());
+			pstm.setInt(5, shohin.getShohin_id());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -157,17 +164,23 @@ public class ShohinModel implements ShohinModelInterface {
 	@Override
 	public boolean deleteUnit(String shohin_num) {
 		String sql = "DELETE FROM shohin WHERE shohin_id = ?";
+		int delCounter=0;
 		try (Connection conn = ShohinUtils.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql)) {
 			pstm.setInt(1, Integer.parseInt(shohin_num));
-			pstm.executeUpdate();
+			delCounter=pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+		if(delCounter==0) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 
+	@Deprecated
 	@Override
 	public boolean tableInitialize() {
 		List<String[]> shohinList = new ArrayList<>();
@@ -216,7 +229,10 @@ public class ShohinModel implements ShohinModelInterface {
                 pstm.setInt(5, Integer.parseInt(ary[4]));
                 }
                 if(ary[5]==null) {
-                	pstm.setString(6,null);
+                	//登録日
+                	 LocalDateTime now = LocalDateTime.now();
+                	 DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                	pstm.setString(6,now.format( dateFormat ));
                 }else {
                 	pstm.setString(6, ary[5]);
                 }
@@ -234,7 +250,7 @@ public class ShohinModel implements ShohinModelInterface {
 
 	@Override
 	public List<Shohin> selectAny(String shohin_mei, String shohin_bunrui) {
-		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ?";
+		String sql = "SELECT * FROM shohin WHERE shohin_mei LIKE ? AND shohin_bunrui LIKE ? ORDER BY shohin_id";
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstm = null;
@@ -245,6 +261,7 @@ public class ShohinModel implements ShohinModelInterface {
 			pstm.setString(2, "%"+shohin_bunrui);
 			rs = pstm.executeQuery();
 			List<Shohin> shohinList = new ArrayList<>();
+			System.out.println(pstm);
 
 			while (rs.next()) {
 				shohinList.add(Shohin.builder()
@@ -253,7 +270,7 @@ public class ShohinModel implements ShohinModelInterface {
 								.shohin_bunrui(rs.getString("shohin_bunrui"))
 								.hanbai_tanka(rs.getInt("hanbai_tanka"))
 								.shiire_tanka(rs.getInt("shiire_tanka"))
-								.torokubi(rs.getString("torokubi"))
+								.torokubi(null)
 								.build());
 			}
 			if(shohinList.size()>0) {

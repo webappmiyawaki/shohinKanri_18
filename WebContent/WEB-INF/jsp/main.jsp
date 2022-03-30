@@ -5,7 +5,7 @@
 <%@ page import = "model.shohin.ShohinBunrui" %>
 <%@ page import ="java.util.*" %>
 <%@ page import ="java.lang.*" %>
-<%@ page import ="model.shohin.IsModel" %>
+<%@ page import ="model.shohin.VerifyModel" %>
 
 <!DOCTYPE html>
 <html>
@@ -17,39 +17,55 @@
 <body>
 
 <h1>商品検索</h1>
-<% request.setCharacterEncoding("UTF-8"); %>
+<%
+request.setCharacterEncoding("UTF-8");
+%>
 <form action="/shohinKanri_18/SelectProcess" method="get">
 	<table>
 	<tbody>
 	<tr>
-	<td>商品名：<input type="text" name="shohin_mei" value=""></td>
-	<td>商品分類：<select name="shohin_bunrui">
-	<% for(ShohinBunrui bunrui :ShohinBunrui.values()){ %>
-		<option value=<%= bunrui.getBunrui() %>>
-		<%= bunrui.getBunrui() %>
-		</option>
-	<% }%>
-	</select>
-	</td>
+	<%
+	Shohin shohin = (Shohin)session.getAttribute("shohin");
+	String name="";
+	String sBunrui="";
+	if(shohin!=null){
+		name=shohin.getShohin_mei();
+		sBunrui=shohin.getShohin_bunrui();
+	}
+	%>
+		<td>商品名：<input type="text" name="shohin_mei" value="<%= name %>"></td>
+		<td>商品分類：
+		<select name="shohin_bunrui" >
+		<%
+		for(ShohinBunrui bunrui :ShohinBunrui.values()){
+		%>
+				<option value="<%= bunrui.getBunrui() %>"
+				 <%if(shohin.getShohin_bunrui().equals(bunrui.getBunrui())){ %>
+				 selected
+				 <% } %>>
+
+				 <%= bunrui.getBunrui() %>
+				 </option>
+		<% } %>
+		</select>
+		</td>
 	</tr>
 	</tbody>
 	</table>
-	<input type="submit" value="検索" name="processName">
+	<input type="submit" value="検索" name="baseProcessName">
 </form>
-
-****検索結果を出力する場所****<br>
-<% IsModel isModel = (IsModel)request.getAttribute("isModel");%>
-	<%List<Shohin> sList = (List<Shohin>)request.getAttribute("shohinList");%>
-	<% if(isModel!=null&&sList==null){ %>
+<%
+VerifyModel verifyModel = (VerifyModel)request.getAttribute("verifyModel");
+%>
+	<%List<Shohin> sList = (List<Shohin>)session.getAttribute("shohinList");%>
+	<%if(verifyModel!=null){
+	if(verifyModel.isSearched()&&sList==null){ %>
 		検索結果はありませんでした。
 	<% } %>
-	<% if(isModel!=null){ %>
-	<% if(isModel.isDelete()==true){ %>
+	<% if(verifyModel.isDeleted()){ %>
 				削除が完了しました。
-	<% } %>
-	<% } %>
+	<% }} %>
 
-<br>
 <br>
 <form action="/shohinKanri_18/SelectProcess" method="get" action="">
 	<table>
@@ -72,30 +88,39 @@
 <%
 if(sList==null){
 }else{
-for(Shohin shohin:sList){
+for(Shohin s:sList){
 %>
 <tr>
-<td><input type="radio" name="shohin_id" value=<%= shohin.getStringShohin_id() %>>
+<td><input type="radio" name="shohin" value=<%= s %>>
 </td>
-<td><%= shohin.getStringShohin_id() %></td>
-<td><%= shohin.getShohin_mei() %></td>
-<td><%= shohin.getShohin_bunrui() %></td>
-<td><%= shohin.getHanbai_tanka() %></td>
-<td><%= shohin.getShiire_tanka() %></td>
-
+<td><%= s.getStringShohin_id() %></td>
+<td><%= s.getShohin_mei() %></td>
+<td><%= s.getShohin_bunrui() %></td>
+<td><%= s.getHanbai_tanka() %></td>
+<td><%= s.getShiire_tanka() %></td>
 </tr>
+
 <%}} %>
 
     </tbody>
 </table>
+
 <a href="/shohinKanri_18/AddShohin">追加</a>
-<input type="submit" value="更新" name="processName">
-<input type="submit" value="削除" name="processName">
+<% if(sList!=null){ %>
+<input type="submit" value="更新" name="baseProcessName">
+<input type="submit" value="削除" name="baseProcessName">
+<% } %>
 </form>
 
-<form action=/shohinKanri_18/TableInitialize method="post" name="processName">
-<input  type="submit" value="テーブル初期化" >
+<form action=/shohinKanri_18/SelectProcess method="get">
+<input type="submit" value="csv全件出力" name="baseProcessName">
 </form>
 
+
+<!-- 初期化は使わない
+<form action=/shohinKanri_18/SelectProcess method="get">
+<input  type="submit" value="テーブル初期化" name="baseProcessName">
+</form>
+-->
 </body>
 </html>

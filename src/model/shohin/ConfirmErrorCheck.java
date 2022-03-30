@@ -1,7 +1,5 @@
 package model.shohin;
 
-import java.util.regex.Pattern;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,42 +18,38 @@ public class ConfirmErrorCheck {
 	public ConfirmErrorCheck(){
 		this.errorMessage = "";
 	}
-	public void shohinCheck(String shohin_id,String shohin_mei,String shohin_bunrui,String hanbai_tanka,String shiire_tanka) {
+	public StringBuilder shohinCheck(Shohin shohin) {
 		StringBuilder errorSb = new StringBuilder("");
-		if(shohin_id==null||shohin_id.isBlank()) {
+		if(shohin.getShohin_id()==0) {
 			errorSb.append("商品IDは必須項目です。<br>");
-		}else {
-
+		}else if(shohin.getShohin_id()>10000){
+			errorSb.append("商品IDは４文字以下で入力してください。<br>");
 		}
-		if(shohin_mei==null||shohin_mei.isBlank()) {
+		if(shohin.getShohin_mei()==null||shohin.getShohin_mei().isBlank()) {
 			errorSb.append("商品名は必須項目です。<br>");
 		}
 
-		if(shohin_bunrui==null||shohin_bunrui.isBlank()) {
+		if(shohin.getShohin_bunrui()==null||shohin.getShohin_bunrui().isBlank()) {
 			errorSb.append("商品分類は必須項目です。<br>");
-		}else {
 		}
 
 
-		if(hanbai_tanka==null||hanbai_tanka.isBlank()) {
-			//0に変換するので処理なし
+		if(shohin.getHanbai_tanka()==0) {
 		}else {
-			Pattern pattern = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
-	        if(pattern.matcher(hanbai_tanka).matches()) {
+			if(!shohin.isInteger_hanbai_tanka()) {
 			errorSb.append("販売単価には整数を入力してください。<br>");
 	        }
 		}
 
-		if(shiire_tanka==null||shiire_tanka.isBlank()) {
-			//0に変換するので処理なし
+		if(shohin.getShiire_tanka()==0) {
 		}else {
-			Pattern pattern = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
-	        if(pattern.matcher(shiire_tanka).matches()) {
+	        if(!shohin.isInteger_shiire_tanka()) {
 			errorSb.append("仕入単価には整数を入力してください。<br>");
 	        }
 		}
 
 		this.errorMessage = errorSb.toString();
+		return errorSb;
 	}
 
 	@Override

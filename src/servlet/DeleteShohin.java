@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.shohin.IsModel;
 import model.shohin.Shohin;
 import model.shohin.ShohinModel;
+import model.shohin.VerifyModel;
 
 @WebServlet("/DeleteShohin")
 public class DeleteShohin extends HttpServlet {
@@ -21,13 +21,12 @@ public class DeleteShohin extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession(true);
 		Shohin shohin = (Shohin)session.getAttribute("shohin");
+		VerifyModel verifyModel = new VerifyModel();
 
-		IsModel isModel = new IsModel();
-		if(shohin.getShohin_id()==0) {
-			ShohinModel shohinModel = new ShohinModel();
-			isModel.setDelete(shohinModel.deleteUnit(shohin.getStringShohin_id()));
-			request.setAttribute("isModel", isModel);
-		}
+		ShohinModel shohinModel = new ShohinModel();
+		verifyModel.setDeleted(shohinModel.deleteUnit(shohin.getStringShohin_id()));
+		request.setAttribute("verifyModel", verifyModel);
+
 		request.getRequestDispatcher("/Main").forward(request, response);
 	}
 

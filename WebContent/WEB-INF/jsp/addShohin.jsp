@@ -4,26 +4,42 @@
 <%@ page import = "model.shohin.ShohinBunrui" %>
 <%@ page import ="java.util.*" %>
 <%@ page import="model.shohin.ConfirmErrorCheck" %>
+<%@ page import ="model.shohin.VerifyModel" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="css/main.css" />
-<title>商品検索</title>
+<title>商品追加</title>
 </head>
 <body>
 
 <h1>商品追加</h1>
 <%
-ConfirmErrorCheck message = (ConfirmErrorCheck)request.getAttribute("message");
-if(message!=null){
+Shohin shohin= (Shohin)session.getAttribute("shohin");
 %>
-<%= message %>
 <%
-}
-%>
+ConfirmErrorCheck errorMsg = (ConfirmErrorCheck)request.getAttribute("message");
 
-<form action="/shohinKanri_18/ConfirmedAddShohin" method="get">
+if(errorMsg!=null){
+if(errorMsg.getErrorMessage()!=""){
+%>
+<%=errorMsg.getErrorMessage() %>
+<%
+}}
+%>
+<%
+VerifyModel verifyModel = (VerifyModel)request.getAttribute("verifyModel");
+%>
+<%if(verifyModel!=null){
+if(verifyModel.isAdded()){ %>
+	登録が完了しました。
+<%	}else{ %>
+	登録処理時に問題が発生しました。
+<% }} %>
+
+<form action="/shohinKanri_18/SelectProcess" method="get">
 商品ID：<input type="text" name="shohin_id" value=""><br>
 商品名：<input type="text" name="shohin_mei" value=""><br>
 商品分類：
@@ -38,7 +54,7 @@ if(message!=null){
 販売単価：<input type="text" name="hanbai_tanka" value=""><br>
 仕入単価：<input type="text" name="shiire_tanka" value=""><br>
 
-<input type="submit" value="登録" name="processName">
+<input type="submit" value="追加" name="addProcessUpdate">
 <a href="/shohinKanri_18/Main">戻る</a>
 </form>
 </body>
